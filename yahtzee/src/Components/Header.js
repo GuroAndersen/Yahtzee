@@ -1,5 +1,5 @@
 import React from "react";
-import { TabMenu } from "primereact/tabmenu";
+import { TabMenu } from 'primereact/tabmenu';
 import { useNavigate } from "react-router-dom";
 
 export default function Header() {
