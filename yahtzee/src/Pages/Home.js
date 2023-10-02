@@ -5,9 +5,9 @@ import "./Home.css";
 export default function Home() {
   return (
     <div className="home-component">
-      <h1>Hei</h1>
+      <h1>YAHTZEE</h1>
       <div className="game-buttons">
-        <Link to="/game">
+        <Link to="/players">
           <Button className="btn">Start game</Button>
         </Link>
         <Link to="/help">

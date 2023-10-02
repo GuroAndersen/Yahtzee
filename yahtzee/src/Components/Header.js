@@ -8,7 +8,7 @@ export default function Header() {
 
   const items = [
     { label: "Home", icon: "pi pi-fw pi-home", path: "/" },
-    { label: "Game", icon: "pi pi-fw pi-play", path: "/game" },
+    { label: "Play", icon: "pi pi-fw pi-play", path: "/players" },
     { label: "Help", icon: "pi pi-fw pi-question", path: "/help" },
   ];
 
