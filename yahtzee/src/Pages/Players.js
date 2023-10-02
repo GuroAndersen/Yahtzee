@@ -18,7 +18,7 @@ export default function Players() {
       <div className="number-of-players"></div>
       <div className="btn">
         {/* Ensure that a valid number of players have been selected! */}
-        <Link to={selectedPlayers ? '/game' : '#' }> 
+        <Link to={selectedPlayers ? `/game/${selectedPlayers}` : '#' }> 
             <Button disabled={!selectedPlayers}> Start game </Button>
         </Link>
         

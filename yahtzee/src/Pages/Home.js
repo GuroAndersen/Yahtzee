@@ -8,7 +8,7 @@ export default function Home() {
       <h1>YAHTZEE</h1>
       <div className="game-buttons">
         <Link to="/players">
-          <Button className="btn">Start game</Button>
+          <Button className="btn">Create game</Button>
         </Link>
         <Link to="/help">
           <Button className="btn">Help</Button>

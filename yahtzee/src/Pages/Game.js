@@ -8,7 +8,9 @@ export default function Game() {
   return (
     <div className="Game-component">
       <h1>THE GAME</h1>
-      <div className="number-of-players"></div>
+      <div className="number-of-players">
+        <p>Number of players chosen: {numPlayers}</p>
+      </div>
     </div>
   );
 }
