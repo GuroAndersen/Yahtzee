@@ -9,6 +9,7 @@ export default function ScoreTable({ numPlayers }) {
     "Fours",
     "Fives",
     "Sixes",
+    "Sum",
     "Bonus",
   ];
   const lowerSection = [
@@ -17,8 +18,8 @@ export default function ScoreTable({ numPlayers }) {
     "Full house",
     "Small straight",
     "Large straight",
-    "Yahtzee",
     "Chance",
+    "Yahtzee",
     "Total sum",
   ];
   const allSections = ["Score Type", ...upperSection, ...lowerSection];

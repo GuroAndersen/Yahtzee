@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./DiceTable.css";
 import { useParams } from "react-router-dom";
 import { Button } from "primereact/button";
+import axios from 'axios';
 
 export default function DiceTable() {
   const { numPlayers } = useParams();
@@ -11,6 +12,19 @@ export default function DiceTable() {
   const [numRolls, setNumRolls] = useState(0);
 
   const maxTurns = 3;
+  const numberOfDice = 5;
+
+  useEffect(() => {
+      // Fetch the value of the dice roll
+      axios.get(`https://localhost:7294/api/Yahtzee/roll/{numberOfDice}`)
+      .then(response => {
+            const fetchedDiceRoll = response.data
+            setDiceValue(fetchedDiceRoll);
+        })
+        .catch(error => {
+          console.error("Error fetching dice roll value: ", error);
+        }); 
+  }, []);
 
   let images = [
     "/DiceImage/Dice-1.png",
@@ -42,7 +56,7 @@ export default function DiceTable() {
         if (numRolls < maxTurns ) {
             const newDiceValue = diceValue.map((value, index) => {
             if (!saveDice[index]) {
-                return Math.floor(Math.random() * 6);
+                return diceValue;
             }
             return value;
             });
