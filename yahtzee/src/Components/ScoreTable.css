@@ -1,0 +1,12 @@
+.table-content table {
+  width: 40vw;
+  color: black;
+  background-color: white;
+  padding: 2px;
+  border-radius: 5px;
+}
+
+.table-content td {
+  border: 1px solid black;
+  border-radius: 2px;
+}

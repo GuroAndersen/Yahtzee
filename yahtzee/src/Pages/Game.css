@@ -1,8 +1,4 @@
-.dice-table {
-  background-color: bisque;
-  border-radius: 15px;
-}
-
-.player-nickname-entry {
+.game-components {
   display: inline-flex;
+  align-items: center;
 }
