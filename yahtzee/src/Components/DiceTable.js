@@ -7,7 +7,7 @@ export default function DiceTable() {
     
     const { numPlayers } = useParams();
 
-    let images = ["/DiceImage/Dice-1.png", "/DiceImage/Dice-2.png", "/DiceImage/Dice-3.png", "/DiceImage/Dice-4.png", "/DiceImage/Dice-5.png"];
+    let images = ["/DiceImage/Dice-1.png", "/DiceImage/Dice-2.png", "/DiceImage/Dice-3.png", "/DiceImage/Dice-4.png", "/DiceImage/Dice-5.png", "/DiceImage/Dice-6.png"];
     let dice = document.querySelectorAll("img");
 
     //console.log(dice);
@@ -15,13 +15,18 @@ export default function DiceTable() {
     function roll() {
 
         setTimeout(function() {
-            let dieOneValue = Math.floor((Math.random()*6 + 1));
-            let dieTwoValue = Math.floor((Math.random()*6 + 1));
-            let dieThreeValue = Math.floor((Math.random()*6 + 1));
-            let dieFourValue = Math.floor((Math.random()*6 + 1));
-            let dieFiveValue = Math.floor((Math.random()*6 + 1));
+            let dieOneValue = Math.floor((Math.random()*6));
+            let dieTwoValue = Math.floor((Math.random()*6));
+            let dieThreeValue = Math.floor((Math.random()*6));
+            let dieFourValue = Math.floor((Math.random()*6));
+            let dieFiveValue = Math.floor((Math.random()*6));
         
             console.log(dieOneValue, dieTwoValue, dieThreeValue, dieFourValue, dieFiveValue);
+            document.querySelector("#die-1").setAttribute("src", images[dieOneValue]);
+            document.querySelector("#die-2").setAttribute("src", images[dieTwoValue]);
+            document.querySelector("#die-3").setAttribute("src", images[dieThreeValue]);
+            document.querySelector("#die-4").setAttribute("src", images[dieFourValue]);
+            document.querySelector("#die-5").setAttribute("src", images[dieFiveValue]);
         }, 1000);
         
     }
