@@ -1,14 +1,15 @@
-import React, { useState} from "react";
+import React, { useContext, useState} from "react";
 import "./DiceTable.css";
 import { useParams } from "react-router-dom";
 import { Button } from "primereact/button";
 import axios from 'axios';
+import DiceContext from './DiceContext';
 
 export default function DiceTable() {
   const { numPlayers } = useParams();
   const [saveDice, setSaveDice] = useState([false, false, false, false, false]);
   const [diceImage, setDiceImage] = useState([0, 0, 0, 0, 0]);
-  const [diceValue, setDiceValue] = useState([0, 0, 0, 0, 0]);
+  const {diceValue, setDiceValue} = useContext(DiceContext);
   const [currentTurn, setCurrentTurn] = useState(1);
   const [numRolls, setNumRolls] = useState(0);
 
@@ -71,7 +72,9 @@ export default function DiceTable() {
 
   return (
     <div className="dice-table-content">
-      <div className="dice-table-game"></div>
+      <div className="dice-table-game">
+        {diceValue}
+      </div>
       <div className="dice-table-dice">
         <img
           src={images[diceImage[0]-1]}

@@ -1,5 +1,8 @@
-import React from "react";
+import React, { useContext, useState } from "react";
 import "./ScoreTable.css";
+import DiceContext from './DiceContext';
+
+import { useParams } from "react-router-dom";
 
 export default function ScoreTable({ numPlayers }) {
   const upperSection = [
@@ -27,6 +30,15 @@ export default function ScoreTable({ numPlayers }) {
   var rows = allSections.length;
   var cols = numPlayers + 1;
 
+  const [score, setScore] = useState(0);
+  
+  const [cellValues, setCellValues] = useState({});
+
+  const {diceValue, setDiceValue} = useContext(DiceContext);
+
+  
+  
+
   return (
     <div className="table-content">
       <table style={{ marginLeft: "2vw" }}>
@@ -40,7 +52,11 @@ export default function ScoreTable({ numPlayers }) {
                   if (i === 0) {
                     return <td key={j}>Player {j}</td>;
                   } else {
-                    return <td key={j}></td>; // Empty cell or any placeholder content you want
+                    return (
+                      <td key={j} >
+                        {cellValues[`${i}-${j}`] || ""} {/* Display cell value */}
+                      </td>
+                    );
                   }
                 }
               })}
