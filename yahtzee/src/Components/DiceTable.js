@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState} from "react";
 import "./DiceTable.css";
 import { useParams } from "react-router-dom";
 import { Button } from "primereact/button";
@@ -7,24 +7,13 @@ import axios from 'axios';
 export default function DiceTable() {
   const { numPlayers } = useParams();
   const [saveDice, setSaveDice] = useState([false, false, false, false, false]);
+  const [diceImage, setDiceImage] = useState([0, 0, 0, 0, 0]);
   const [diceValue, setDiceValue] = useState([0, 0, 0, 0, 0]);
   const [currentTurn, setCurrentTurn] = useState(1);
   const [numRolls, setNumRolls] = useState(0);
 
   const maxTurns = 3;
   const numberOfDice = 5;
-
-  useEffect(() => {
-      // Fetch the value of the dice roll
-      axios.get(`https://localhost:7294/api/Yahtzee/roll/{numberOfDice}`)
-      .then(response => {
-            const fetchedDiceRoll = response.data
-            setDiceValue(fetchedDiceRoll);
-        })
-        .catch(error => {
-          console.error("Error fetching dice roll value: ", error);
-        }); 
-  }, []);
 
   let images = [
     "/DiceImage/Dice-1.png",
@@ -53,54 +42,63 @@ export default function DiceTable() {
   }
 
   function roll() { 
-        if (numRolls < maxTurns ) {
-            const newDiceValue = diceValue.map((value, index) => {
+      axios.get(`/api/Yahtzee/roll/${numberOfDice}`)
+      .then(response => {
+        const fetchedDiceRoll = response.data;
+        
+        const newDiceValue = diceValue.map((value, index) => {
             if (!saveDice[index]) {
-                return diceValue;
+                return fetchedDiceRoll[index];
             }
             return value;
-            });
-            setDiceValue(newDiceValue);
-       
-            console.log(newDiceValue);
-            setNumRolls(numRolls+1);
-        }
-        else {
+        });
+
+        setDiceValue(newDiceValue);
+        setDiceImage(newDiceValue);
+        console.log(newDiceValue);
+
+        if (numRolls < maxTurns) {
+            setNumRolls(numRolls + 1);
+        } else {
             setNumRolls(0);
             nextTurn();
-        }               
-  }
+        }
+    })
+    .catch(error => {
+        console.error("Error fetching dice roll value: ", error);
+    });
+}
 
   return (
     <div className="dice-table-content">
       <div className="dice-table-game"></div>
       <div className="dice-table-dice">
         <img
-          src={images[diceValue[0]]}
+          src={images[diceImage[0]-1]}
           id="die-1"
           alt="die-1"
           onClick={() => toggleSave(0)}
         />
         <img
-          src={images[diceValue[1]]}
+          src={images[diceImage[1]-1]}
           id="die-2"
           alt="die-2"
           onClick={() => toggleSave(1)}
         />
         <img
-          src={images[diceValue[2]]}
+          src={images[diceImage[2]-1]}
           id="die-3"
           alt="die-3"
           onClick={() => toggleSave(2)}
         />
         <img
-          src={images[diceValue[3]]}
+          src={images[diceImage[3]-1]}
           id="die-4"
           alt="die-4"
           onClick={() => toggleSave(3)}
         />
         <img
-          src={images[diceValue[4]]}
+          src={images[diceImage[4]-1]}
           id="die-5"
           alt="die-5"
           onClick={() => toggleSave(4)}
