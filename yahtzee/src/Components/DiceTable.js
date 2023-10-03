@@ -7,6 +7,10 @@ export default function DiceTable() {
   const { numPlayers } = useParams();
   const [saveDice, setSaveDice] = useState([false, false, false, false, false]);
   const [diceValue, setDiceValue] = useState([0, 0, 0, 0, 0]);
+  const [currentTurn, setCurrentTurn] = useState(1);
+  const [numRolls, setNumRolls] = useState(0);
+
+  const maxTurns = 3;
 
   let images = [
     "/DiceImage/Dice-1.png",
@@ -25,19 +29,32 @@ export default function DiceTable() {
     setSaveDice(newSavedDice);
   }
 
-  function roll() {
-    const newDiceValue = diceValue.map((value, index) => {
-      if (!saveDice[index]) {
-        return Math.floor(Math.random() * 6);
-      }
-      return value;
-    });
-    setDiceValue(newDiceValue);
+  function nextTurn() {
+    setCurrentTurn((prevTurn) => {
+        if (prevTurn === parseInt(numPlayers)) {
+            return 1;
+        }
+        return prevTurn + 1;
+    })
+  }
 
-      console.log(
-        newDiceValue
-      );
-      
+  function roll() { 
+        if (numRolls < maxTurns ) {
+            const newDiceValue = diceValue.map((value, index) => {
+            if (!saveDice[index]) {
+                return Math.floor(Math.random() * 6);
+            }
+            return value;
+            });
+            setDiceValue(newDiceValue);
+       
+            console.log(newDiceValue);
+            setNumRolls(numRolls+1);
+        }
+        else {
+            setNumRolls(0);
+            nextTurn();
+        }               
   }
 
   return (
@@ -80,7 +97,7 @@ export default function DiceTable() {
         <Button className="btn" onClick={roll}>
           Roll Dice
         </Button>
-        <div className="player-name">{numPlayers}</div>
+        <div className="player-name">Player {currentTurn}'s turn</div>
       </div>
     </div>
   );
