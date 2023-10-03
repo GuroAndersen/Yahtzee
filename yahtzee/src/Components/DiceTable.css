@@ -1,6 +1,25 @@
 .dice-table-content {
-  background-color: wheat;
+  background-color: white;
   width: 40vw;
   height: 50vh;
+  border-radius: 5px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.player-name {
+  color: black;
+}
+
+.dice-table-dice {
+  margin: 10px;
+}
+
+.dice-table-dice img {
+  height: 50px;
+  width: 50px;
+  margin: 5px;
   border-radius: 5px;
 }
