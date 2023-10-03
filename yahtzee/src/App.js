@@ -9,17 +9,24 @@ import Header from "./Components/Header";
 
 import "primereact/resources/themes/arya-blue/theme.css";
 import "primereact/resources/primereact.min.css";
-import 'primeicons/primeicons.css';
+import "primeicons/primeicons.css";
 
 function App() {
   return (
     <div className="App">
       <Router>
         <Header />
+        <div className="App-logo">
+          <img
+            src={"/DiceImage/die-logo.png"}
+            id={"dice-logo"}
+            alt={"dice-logo"}
+          />
+        </div>
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/help" element={<Help />} />
-          <Route path='/game/:numPlayers' element={<Game />} />
+          <Route path="/game/:numPlayers" element={<Game />} />
           <Route path="/players" element={<Players />} />
         </Routes>
       </Router>
