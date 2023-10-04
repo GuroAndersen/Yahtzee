@@ -4,11 +4,12 @@ import { useParams } from "react-router-dom";
 import { Button } from "primereact/button";
 import axios from 'axios';
 import DiceContext from './DiceContext';
+import EvaluateRoll from './EvaluateRoll';
 
 export default function DiceTable() {
   const { numPlayers } = useParams();
   const [saveDice, setSaveDice] = useState([false, false, false, false, false]);
-  const [diceImage, setDiceImage] = useState([0, 0, 0, 0, 0]);
+  const [diceImage, setDiceImage] = useState([1, 2, 3, 4, 5]);
   const {diceValue, setDiceValue} = useContext(DiceContext);
   const [currentTurn, setCurrentTurn] = useState(1);
   const [numRolls, setNumRolls] = useState(0);
@@ -58,6 +59,8 @@ export default function DiceTable() {
         setDiceImage(newDiceValue);
         console.log(newDiceValue);
 
+        handleDice();
+
         if (numRolls < maxTurns) {
             setNumRolls(numRolls + 1);
         } else {
@@ -69,6 +72,12 @@ export default function DiceTable() {
         console.error("Error fetching dice roll value: ", error);
     });
 }
+
+  const handleDice = () => {
+      EvaluateRoll(diceValue, (evaluation) => {
+        console.log(evaluation);
+      })
+  }
 
   return (
     <div className="dice-table-content">
@@ -112,6 +121,7 @@ export default function DiceTable() {
         <Button className="btn" onClick={roll}>
           Roll Dice
         </Button>
+        
         <div className="player-name">Player {currentTurn}'s turn</div>
       </div>
     </div>
