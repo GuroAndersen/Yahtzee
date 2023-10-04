@@ -4,6 +4,7 @@ import EvaluateRoll from "./EvaluateRoll";
 import DiceContext from './DiceContext';
 import ButtonContext from "./ButtonContext";
 import TurnContext from "./TurnContext";
+import SaveDiceContext from "./SaveDiceContext";
  
 export default function ScoreTable({ numPlayers }) {
   const upperSection = [
@@ -38,6 +39,7 @@ export default function ScoreTable({ numPlayers }) {
   const [evaluation, setEvaluation] = useState({});
   const { numRolls, setNumRolls } = useContext(ButtonContext);
   const {currentTurn, setCurrentTurn} = useContext(TurnContext);
+  const {saveDice, setSaveDice} = useContext(SaveDiceContext);
 
   const resetRolls = () => {
     setNumRolls(0);
@@ -84,7 +86,15 @@ export default function ScoreTable({ numPlayers }) {
 
   const handleClick= (rowIndex, colIndex) => {
     if (lockedCells[`${rowIndex}-${colIndex}`]) return;
-
+    console.log("current turn: ", currentTurn);
+    console.log("colindex: ", colIndex);
+    if (currentTurn !== colIndex) return;
+    if (numRolls === 0) {
+      return;
+    }
+    if (rowIndex === 7 || rowIndex === 8 || rowIndex === 16) {
+      return;
+    }
   
     const value = EvaluateRoll(diceValue, (evaluation) => {
       console.log("Here is eval: ", evaluation);
@@ -108,40 +118,92 @@ export default function ScoreTable({ numPlayers }) {
       }
       else if (rowIndex === 6){
         scores[colIndex-1].sixes = evaluation.sixes;
-      }
-      else if (rowIndex === 7){
-        scores[colIndex-1].sum = evaluation.sum;
-      }
+      } 
       else if (rowIndex === 9){
-        scores[colIndex-1].bonus = evaluation.bonus;
-      }
-      else if (rowIndex === 10){
         scores[colIndex-1].threeOfAKind = evaluation.threeOfAKind;
       }
-      else if (rowIndex === 11){
+      else if (rowIndex === 10){
         scores[colIndex-1].fourOfAKind = evaluation.fourOfAKind;
       }
-      else if (rowIndex === 12){
+      else if (rowIndex === 11){
         scores[colIndex-1].fullHouse = evaluation.fullHouse;
       }
-      else if (rowIndex === 13){
+      else if (rowIndex === 12){
         scores[colIndex-1].smallStraight = evaluation.smallStraight;
       }
-      else if (rowIndex === 14){
+      else if (rowIndex === 13){
         scores[colIndex-1].largeStraight = evaluation.largeStraight;
       }
-      else if (rowIndex === 15){
+      else if (rowIndex === 14){
         scores[colIndex-1].chance = evaluation.chance;
       }
-      else if (rowIndex === 16){
+      else if (rowIndex === 15){
         scores[colIndex-1].yahtzee = evaluation.yahtzee;
       }
-      else if (rowIndex === 17){
-        scores[colIndex-1].totalSum = evaluation.totalSum;
+      
+      let sum = 0;
+      if (scores[colIndex-1].ones !== undefined) {
+        sum += scores[colIndex-1].ones; 
       }
+      if (scores[colIndex-1].twos !== undefined) {
+        sum += scores[colIndex-1].twos; 
+      }
+      if (scores[colIndex-1].threes !== undefined) {
+        sum += scores[colIndex-1].threes; 
+      }
+      if (scores[colIndex-1].fours !== undefined) {
+        sum += scores[colIndex-1].fours; 
+      }
+      if (scores[colIndex-1].fives !== undefined) {
+        sum += scores[colIndex-1].fives; 
+      }
+      if (scores[colIndex-1].sixes !== undefined) {
+        sum += scores[colIndex-1].sixes; 
+      }
+
+      scores[colIndex-1].sum = sum;
+
+      if (sum >= 63) {
+        scores[colIndex-1].bonus = 35;
+      } else {
+        scores[colIndex-1].bonus = 0;
+      }
+
+      let totalSum = 0;
+      if (scores[colIndex-1].sum !== undefined) {
+        totalSum += scores[colIndex-1].sum;
+      }
+      if (scores[colIndex-1].bonus !== undefined) {
+        totalSum += scores[colIndex-1].bonus;
+      }
+      if (scores[colIndex-1].threeOfAKind !== undefined) {
+        totalSum += scores[colIndex-1].threeOfAKind;
+      }
+      if (scores[colIndex-1].fourOfAKind !== undefined) {
+        totalSum += scores[colIndex-1].fourOfAKind;
+      }
+      if (scores[colIndex-1].fullHouse !== undefined) {
+        totalSum += scores[colIndex-1].fullHouse;
+      }
+      if (scores[colIndex-1].smallStraight !== undefined) {
+        totalSum += scores[colIndex-1].smallStraight;
+      }
+      if (scores[colIndex-1].largeStraight !== undefined) {
+        totalSum += scores[colIndex-1].largeStraight;
+      }
+      if (scores[colIndex-1].chance !== undefined) {
+        totalSum += scores[colIndex-1].chance;
+      }
+      if (scores[colIndex-1].yahtzee !== undefined) {
+        totalSum += scores[colIndex-1].yahtzee;
+      }
+
+      scores[colIndex-1].totalSum = totalSum;
+
       setScores(scores);
       resetRolls();
       nextTurn();
+      setSaveDice([false, false, false, false, false]);
       console.log(scores);
       updateCells();
       console.log(cellValues);
@@ -150,9 +212,9 @@ export default function ScoreTable({ numPlayers }) {
         ...prevLocked,
         [`${rowIndex}-${colIndex}`]: true,
       }));
-    });
 
-    
+
+    });
   }
   
   function updateCells() {
@@ -166,9 +228,9 @@ export default function ScoreTable({ numPlayers }) {
         [`${4}-${i+1}`]: scores[i].fours,
         [`${5}-${i+1}`]: scores[i].fives,
         [`${6}-${i+1}`]: scores[i].sixes,
-        [`${7}-${i+1}`]: scores[i].bonus,
-        [`${8}-${i+1}`]: scores[i].sum,
-        [`${9}-${i+1}`]: scores[i].threeOfaKind,
+        [`${7}-${i+1}`]: scores[i].sum,
+        [`${8}-${i+1}`]: scores[i].bonus,
+        [`${9}-${i+1}`]: scores[i].threeOfAKind,
         [`${10}-${i+1}`]: scores[i].fourOfAKind,
         [`${11}-${i+1}`]: scores[i].fullHouse,
         [`${12}-${i+1}`]: scores[i].smallStraight,
@@ -194,8 +256,8 @@ export default function ScoreTable({ numPlayers }) {
                     return <td key={j}>Player {j}</td>;
                   } else {
                     return (
-                      <td key={j} onClick={() => handleClick(i, j)} style={{ cursor: 'pointer', backgroundColor: 'wheat', color: 'black'}}>
-                        {cellValues[`${i}-${j}`] || `${i}-${j}`} {/* Display cell value */}
+                      <td key={j} onClick={() => handleClick(i, j)} style={{ cursor: 'pointer', backgroundColor: 'var(--primary-100)', color: 'black'}}>
+                        {cellValues[`${i}-${j}`] !== undefined ? cellValues[`${i}-${j}`] : ""} {/* Display cell value */}
                       </td>
                     );
                   }

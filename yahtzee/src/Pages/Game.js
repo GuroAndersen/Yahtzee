@@ -6,6 +6,7 @@ import './Game.css';
 import DiceContext from '../Components/DiceContext';
 import ButtonContext from "../Components/ButtonContext";
 import TurnContext from "../Components/TurnContext";
+import SaveDiceContext from "../Components/SaveDiceContext";
 
 
 export default function Game() {
@@ -14,6 +15,7 @@ export default function Game() {
   const [diceValue, setDiceValue] = useState([1, 2, 3, 4, 5]);
   const [numRolls, setNumRolls] = useState(0);
   const [currentTurn, setCurrentTurn] = useState(1);
+  const [saveDice, setSaveDice] = useState([false, false, false, false, false]);
  
   return (
     <div className="Game-component">
@@ -24,6 +26,7 @@ export default function Game() {
       <DiceContext.Provider value={{ diceValue, setDiceValue }}>
       <ButtonContext.Provider value={{ numRolls, setNumRolls}}>
       <TurnContext.Provider value={{currentTurn, setCurrentTurn}}>
+      <SaveDiceContext.Provider value={{saveDice, setSaveDice}}>
         <div className="game-components">
         <div className="dice-table">
           <DiceTable />
@@ -32,6 +35,8 @@ export default function Game() {
           <ScoreTable numPlayers={parseInt(numPlayers, 10)} />
         </div>
       </div>
+      </SaveDiceContext.Provider>
+        
       </TurnContext.Provider>
       </ButtonContext.Provider>
       </DiceContext.Provider>
