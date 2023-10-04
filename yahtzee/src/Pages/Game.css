@@ -2,3 +2,19 @@
   display: inline-flex;
   align-items: center;
 }
+
+.App-logo-game img {
+  display: flex;
+  height: 100px;
+  pointer-events: none;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 2vh;
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo-game img {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}

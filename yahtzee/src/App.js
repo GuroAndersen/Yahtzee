@@ -16,13 +16,7 @@ function App() {
     <div className="App">
       <Router>
         <Header />
-        <div className="App-logo">
-          <img
-            src={"/DiceImage/die-logo.png"}
-            id={"dice-logo"}
-            alt={"dice-logo"}
-          />
-        </div>
+        
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/help" element={<Help />} />

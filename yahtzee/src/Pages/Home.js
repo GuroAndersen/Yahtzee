@@ -6,6 +6,13 @@ import "./Home.css";
 export default function Home() {
   return (
     <div className="home-component">
+      <div className="App-logo">
+          <img
+            src={"/DiceImage/die-logo.png"}
+            id={"dice-logo"}
+            alt={"dice-logo"}
+          />
+        </div>
       <h1>YAHTZEE</h1>
       <div className="game-buttons">
         <Link to="/players">

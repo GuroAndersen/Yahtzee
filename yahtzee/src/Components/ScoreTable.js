@@ -1,10 +1,11 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import "./ScoreTable.css";
 import EvaluateRoll from "./EvaluateRoll";
 import DiceContext from './DiceContext';
 import ButtonContext from "./ButtonContext";
 import TurnContext from "./TurnContext";
 import SaveDiceContext from "./SaveDiceContext";
+import WinnerContext from "../Components/WinnerContext";
  
 export default function ScoreTable({ numPlayers }) {
   const upperSection = [
@@ -40,6 +41,7 @@ export default function ScoreTable({ numPlayers }) {
   const { numRolls, setNumRolls } = useContext(ButtonContext);
   const {currentTurn, setCurrentTurn} = useContext(TurnContext);
   const {saveDice, setSaveDice} = useContext(SaveDiceContext);
+  const {winner, setWinner} = useContext(WinnerContext);
 
   const resetRolls = () => {
     setNumRolls(0);
@@ -80,6 +82,18 @@ export default function ScoreTable({ numPlayers }) {
         }
         return prevTurn + 1;
     })
+  }
+
+  function checkCompletion(scores) {
+    for (let i = 1; i < cols; i++) {
+      for (let j = 1; j < rows; j++) {
+        if(scores[`${j}-${i}`] === undefined) {
+          return false;
+        }
+
+      }
+    }
+    return true;
   }
   
   const [scores, setScores] = useState(initScore(numPlayers));
@@ -205,19 +219,34 @@ export default function ScoreTable({ numPlayers }) {
       nextTurn();
       setSaveDice([false, false, false, false, false]);
       console.log(scores);
-      updateCells();
-      console.log(cellValues);
+      updateCells(scores);
+      console.log("cellvalues: ", cellValues);
   
       setLockedCells((prevLocked) => ({
         ...prevLocked,
         [`${rowIndex}-${colIndex}`]: true,
       }));
-
-
     });
+
+    
   }
+
+  useEffect(() => {
+    if (checkCompletion(cellValues)) {
+      let highestScore = 0;
+      let leadingPlayer = 0;
+      
+      for (let i = 0; i < numPlayers; i++) {
+        if (scores[i].totalSum > highestScore) {
+          highestScore = scores[i].totalSum;
+          leadingPlayer = i + 1;
+        }
+      }
+      setWinner(leadingPlayer);
+    } 
+  })
   
-  function updateCells() {
+  function updateCells(scores) {
     for (let i = 0; i < cols - 1; i++) {
       console.log(i);
       setCellValues((prevValues) => ({
