@@ -9,7 +9,4 @@ export default function EvaluateRoll(diceValue, callback) {
                 .catch(error => {
                     console.error("Error evaluating player hand: ", error);
                 });
-      
-
-    
 }

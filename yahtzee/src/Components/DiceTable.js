@@ -3,8 +3,8 @@ import "./DiceTable.css";
 import { useParams } from "react-router-dom";
 import { Button } from "primereact/button";
 import axios from 'axios';
-import DiceContext from './DiceContext';
 import EvaluateRoll from './EvaluateRoll';
+import DiceContext from "./DiceContext";
 
 export default function DiceTable() {
   const { numPlayers } = useParams();
@@ -13,6 +13,7 @@ export default function DiceTable() {
   const {diceValue, setDiceValue} = useContext(DiceContext);
   const [currentTurn, setCurrentTurn] = useState(1);
   const [numRolls, setNumRolls] = useState(0);
+  const [evaluation, setEvaluation] = useState({});
 
   const maxTurns = 3;
   const numberOfDice = 5;
@@ -56,10 +57,9 @@ export default function DiceTable() {
         });
 
         setDiceValue(newDiceValue);
-        setDiceImage(newDiceValue);
+        //setDiceImage(newDiceValue);
         console.log(newDiceValue);
-
-        handleDice();
+        handleDice(newDiceValue);
 
         if (numRolls < maxTurns) {
             setNumRolls(numRolls + 1);
@@ -71,46 +71,47 @@ export default function DiceTable() {
     .catch(error => {
         console.error("Error fetching dice roll value: ", error);
     });
-}
+  }
 
-  const handleDice = () => {
-      EvaluateRoll(diceValue, (evaluation) => {
+  const handleDice = (newDiceValue) => {
+      EvaluateRoll(newDiceValue, (evaluation) => {
         console.log(evaluation);
+        
+        setEvaluation(evaluation);
       })
   }
 
   return (
     <div className="dice-table-content">
       <div className="dice-table-game">
-        {diceValue}
       </div>
       <div className="dice-table-dice">
         <img
-          src={images[diceImage[0]-1]}
+          src={images[diceValue[0]-1]}
           id="die-1"
           alt="die-1"
           onClick={() => toggleSave(0)}
         />
         <img
-          src={images[diceImage[1]-1]}
+          src={images[diceValue[1]-1]}
           id="die-2"
           alt="die-2"
           onClick={() => toggleSave(1)}
         />
         <img
-          src={images[diceImage[2]-1]}
+          src={images[diceValue[2]-1]}
           id="die-3"
           alt="die-3"
           onClick={() => toggleSave(2)}
         />
         <img
-          src={images[diceImage[3]-1]}
+          src={images[diceValue[3]-1]}
           id="die-4"
           alt="die-4"
           onClick={() => toggleSave(3)}
         />
         <img
-          src={images[diceImage[4]-1]}
+          src={images[diceValue[4]-1]}
           id="die-5"
           alt="die-5"
           onClick={() => toggleSave(4)}
@@ -120,8 +121,7 @@ export default function DiceTable() {
       <div className="dice-table-bottom">
         <Button className="btn" onClick={roll}>
           Roll Dice
-        </Button>
-        
+        </Button>     
         <div className="player-name">Player {currentTurn}'s turn</div>
       </div>
     </div>

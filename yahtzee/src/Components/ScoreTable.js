@@ -1,9 +1,8 @@
 import React, { useContext, useState } from "react";
 import "./ScoreTable.css";
+import EvaluateRoll from "./EvaluateRoll";
 import DiceContext from './DiceContext';
-
-import { useParams } from "react-router-dom";
-
+ 
 export default function ScoreTable({ numPlayers }) {
   const upperSection = [
     "Ones",
@@ -30,15 +29,80 @@ export default function ScoreTable({ numPlayers }) {
   var rows = allSections.length;
   var cols = numPlayers + 1;
 
-  const [score, setScore] = useState(0);
   
   const [cellValues, setCellValues] = useState({});
-
+  const [lockedCells, setLockedCells] = useState([]);
   const {diceValue, setDiceValue} = useContext(DiceContext);
 
-  
-  
+  const initScore = (numPlayers) => {
+    let playerScores = [];
+    
+    for (let i = 0; i < numPlayers; i++) {
+      const playerscore = {
+        ones: 1,
+        twos: 2,
+        threes: undefined,
+        fours: undefined,
+        fives: undefined,
+        sixes: undefined,
+        sum: undefined,
+        bonus: undefined,
+        threeofakind: undefined,
+        fourofakind: undefined,
+        fullhouse: undefined,
+        smallstraight: undefined,
+        largestraight: undefined,
+        chance: undefined,
+        yahtzee: undefined,
+        totalsum: undefined,
+      };
 
+      playerScores.push(playerscore);
+    }
+    return playerScores;
+  }
+  
+  const [scores, setScores] = useState(initScore(numPlayers));
+
+  const handleClick= (rowIndex, colIndex) => {
+    if (lockedCells[`${rowIndex}-${colIndex}`]) return;
+
+    const value = EvaluateRoll(diceValue, (evaluation) => {
+      console.log(evaluation);
+    });
+
+    console.log(scores);
+    updateCells();
+    console.log(cellValues);
+
+    setLockedCells((prevLocked) => ({
+      ...prevLocked,
+      [`${rowIndex}-${colIndex}`]: true,
+    }));
+  }
+  
+  function updateCells() {
+    for (let i = 0; i < cols - 1; i++) {
+      console.log(i);
+      setCellValues((prevValues) => ({
+        ...prevValues,
+        [`${1}-${i+1}`]: scores[i].ones,
+        [`${2}-${i+1}`]: scores[i].twos,
+        [`${3}-${i+1}`]: scores[i].threes,
+        [`${4}-${i+1}`]: scores[i].fours,
+        [`${5}-${i+1}`]: scores[i].fives,
+        [`${6}-${i+1}`]: scores[i].sixes,
+        [`${9}-${i+1}`]: scores[i].threeofakind,
+        [`${10}-${i+1}`]: scores[i].fourofakind,
+        [`${11}-${i+1}`]: scores[i].fullhouse,
+        [`${12}-${i+1}`]: scores[i].smallstraight,
+        [`${13}-${i+1}`]: scores[i].largestraight,
+        [`${14}-${i+1}`]: scores[i].chance,
+        [`${15}-${i+1}`]: scores[i].yahtzee,
+    }));
+    }
+  }
+  
   return (
     <div className="table-content">
       <table style={{ marginLeft: "2vw" }}>
@@ -53,8 +117,8 @@ export default function ScoreTable({ numPlayers }) {
                     return <td key={j}>Player {j}</td>;
                   } else {
                     return (
-                      <td key={j} >
-                        {cellValues[`${i}-${j}`] || ""} {/* Display cell value */}
+                      <td key={j} onClick={() => handleClick(i, j)} style={{ cursor: 'pointer', backgroundColor: 'wheat', color: 'black'}}>
+                        {cellValues[`${i}-${j}`] || `${i}-${j}`} {/* Display cell value */}
                       </td>
                     );
                   }

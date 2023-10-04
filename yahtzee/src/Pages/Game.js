@@ -9,7 +9,7 @@ import DiceContext from '../Components/DiceContext';
 export default function Game() {
   
   const { numPlayers } = useParams();
-  const [diceValue, setDiceValue] = useState([0, 0, 0, 0, 0]);
+  const [diceValue, setDiceValue] = useState([1, 2, 3, 4, 5]);
  
   return (
     <div className="Game-component">
