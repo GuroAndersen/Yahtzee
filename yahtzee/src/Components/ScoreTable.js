@@ -52,20 +52,20 @@ export default function ScoreTable({ numPlayers }) {
     
     for (let i = 0; i < numPlayers; i++) {
       const playerscore = {
-        ones: undefined,
-        twos: undefined,
-        threes: undefined,
-        fours: undefined,
-        fives: undefined,
-        sixes: undefined,
-        sum: undefined,
-        bonus: undefined,
-        threeOfAKind: undefined,
-        fourOfAKind: undefined,
-        fullHouse: undefined,
-        smallStraight: undefined,
-        largeStraight: undefined,
-        chance: undefined,
+        ones: 1,
+        twos: 1,
+        threes: 1,
+        fours: 1,
+        fives: 1,
+        sixes: 1,
+        sum: 1,
+        bonus: 1,
+        threeOfAKind: 1,
+        fourOfAKind: 1,
+        fullHouse: 1,
+        smallStraight: 1,
+        largeStraight: 1,
+        chance: 1,
         yahtzee: undefined,
         totalSum: undefined,
       };
@@ -90,7 +90,6 @@ export default function ScoreTable({ numPlayers }) {
         if(scores[`${j}-${i}`] === undefined) {
           return false;
         }
-
       }
     }
     return true;
@@ -226,15 +225,15 @@ export default function ScoreTable({ numPlayers }) {
         ...prevLocked,
         [`${rowIndex}-${colIndex}`]: true,
       }));
-    });
-
-    
+    });  
   }
 
   useEffect(() => {
     if (checkCompletion(cellValues)) {
       let highestScore = 0;
       let leadingPlayer = 0;
+      let countWinners = 0;
+      let winners = [];
       
       for (let i = 0; i < numPlayers; i++) {
         if (scores[i].totalSum > highestScore) {
@@ -242,7 +241,22 @@ export default function ScoreTable({ numPlayers }) {
           leadingPlayer = i + 1;
         }
       }
-      setWinner(leadingPlayer);
+      for (let i = 0; i < numPlayers; i++) {
+        if (highestScore === scores[i].totalSum) {
+          countWinners++;
+          winners.push(i+1);
+        }
+      }
+      if (countWinners === 1) {
+        setWinner('Player ' + leadingPlayer + ' wins!');
+      }
+      else {
+        let winnerString = "The winners are: ";
+        for (let i = 0; i < countWinners; i++) {
+          winnerString+="Player " + winners[i] + (i === countWinners - 1 ? "" : ", ");
+        }
+        setWinner(winnerString);
+      }
     } 
   })
   

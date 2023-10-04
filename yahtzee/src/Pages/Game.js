@@ -17,7 +17,7 @@ export default function Game() {
   const [numRolls, setNumRolls] = useState(0);
   const [currentTurn, setCurrentTurn] = useState(1);
   const [saveDice, setSaveDice] = useState([false, false, false, false, false]);
-  const [winner, setWinner] = useState(0);
+  const [winner, setWinner] = useState("");
  
   return (
     <div className="Game-component">
@@ -54,7 +54,7 @@ export default function Game() {
       </DiceContext.Provider>
       <div className="winner-component">
         <h1>
-           {winner !== 0 ? ('Player ' + winner + ' wins') : null} 
+           {winner !== 0 ? winner : null} 
         </h1>
       </div>
     </div>
