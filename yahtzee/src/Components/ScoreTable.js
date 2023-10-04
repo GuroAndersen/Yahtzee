@@ -2,6 +2,8 @@ import React, { useContext, useState } from "react";
 import "./ScoreTable.css";
 import EvaluateRoll from "./EvaluateRoll";
 import DiceContext from './DiceContext';
+import ButtonContext from "./ButtonContext";
+import TurnContext from "./TurnContext";
  
 export default function ScoreTable({ numPlayers }) {
   const upperSection = [
@@ -34,7 +36,12 @@ export default function ScoreTable({ numPlayers }) {
   const [lockedCells, setLockedCells] = useState([]);
   const {diceValue, setDiceValue} = useContext(DiceContext);
   const [evaluation, setEvaluation] = useState({});
-  const [currentTurn, setCurrentTurn] = useState(1);
+  const { numRolls, setNumRolls } = useContext(ButtonContext);
+  const {currentTurn, setCurrentTurn} = useContext(TurnContext);
+
+  const resetRolls = () => {
+    setNumRolls(0);
+  }
 
   const initScore = (numPlayers) => {
     let playerScores = [];
@@ -62,6 +69,15 @@ export default function ScoreTable({ numPlayers }) {
       playerScores.push(playerscore);
     }
     return playerScores;
+  }
+
+  function nextTurn() {
+    setCurrentTurn((prevTurn) => {
+        if (prevTurn === parseInt(numPlayers)) {
+            return 1;
+        }
+        return prevTurn + 1;
+    })
   }
   
   const [scores, setScores] = useState(initScore(numPlayers));
@@ -124,6 +140,8 @@ export default function ScoreTable({ numPlayers }) {
         scores[colIndex-1].totalSum = evaluation.totalSum;
       }
       setScores(scores);
+      resetRolls();
+      nextTurn();
       console.log(scores);
       updateCells();
       console.log(cellValues);

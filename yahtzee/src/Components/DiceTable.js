@@ -5,14 +5,16 @@ import { Button } from "primereact/button";
 import axios from 'axios';
 import EvaluateRoll from './EvaluateRoll';
 import DiceContext from "./DiceContext";
+import ButtonContext from "./ButtonContext";
+import TurnContext from "./TurnContext";
 
 export default function DiceTable() {
   const { numPlayers } = useParams();
   const [saveDice, setSaveDice] = useState([false, false, false, false, false]);
   const [diceImage, setDiceImage] = useState([1, 2, 3, 4, 5]);
   const {diceValue, setDiceValue} = useContext(DiceContext);
-  const [currentTurn, setCurrentTurn] = useState(1);
-  const [numRolls, setNumRolls] = useState(0);
+  const {currentTurn, setCurrentTurn} = useContext(TurnContext);
+  const {numRolls, setNumRolls} = useContext(ButtonContext);
   const [evaluation, setEvaluation] = useState({});
 
   const maxTurns = 3;
