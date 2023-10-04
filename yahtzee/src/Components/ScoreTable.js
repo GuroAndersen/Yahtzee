@@ -33,28 +33,30 @@ export default function ScoreTable({ numPlayers }) {
   const [cellValues, setCellValues] = useState({});
   const [lockedCells, setLockedCells] = useState([]);
   const {diceValue, setDiceValue} = useContext(DiceContext);
+  const [evaluation, setEvaluation] = useState({});
+  const [currentTurn, setCurrentTurn] = useState(1);
 
   const initScore = (numPlayers) => {
     let playerScores = [];
     
     for (let i = 0; i < numPlayers; i++) {
       const playerscore = {
-        ones: 1,
-        twos: 2,
+        ones: undefined,
+        twos: undefined,
         threes: undefined,
         fours: undefined,
         fives: undefined,
         sixes: undefined,
         sum: undefined,
         bonus: undefined,
-        threeofakind: undefined,
-        fourofakind: undefined,
-        fullhouse: undefined,
-        smallstraight: undefined,
-        largestraight: undefined,
+        threeOfAKind: undefined,
+        fourOfAKind: undefined,
+        fullHouse: undefined,
+        smallStraight: undefined,
+        largeStraight: undefined,
         chance: undefined,
         yahtzee: undefined,
-        totalsum: undefined,
+        totalSum: undefined,
       };
 
       playerScores.push(playerscore);
@@ -67,18 +69,72 @@ export default function ScoreTable({ numPlayers }) {
   const handleClick= (rowIndex, colIndex) => {
     if (lockedCells[`${rowIndex}-${colIndex}`]) return;
 
+  
     const value = EvaluateRoll(diceValue, (evaluation) => {
-      console.log(evaluation);
+      console.log("Here is eval: ", evaluation);
+      let ev = evaluation;
+      setEvaluation(evaluation);
+
+      if (rowIndex === 1) {
+        scores[colIndex-1].ones = evaluation.aces;
+      }
+      else if (rowIndex === 2){
+        scores[colIndex-1].twos = evaluation.twos;
+      }
+      else if (rowIndex === 3){
+        scores[colIndex-1].threes = evaluation.threes;
+      }
+      else if (rowIndex === 4){
+        scores[colIndex-1].fours = evaluation.fours;
+      }
+      else if (rowIndex === 5){
+        scores[colIndex-1].fives = evaluation.fives;
+      }
+      else if (rowIndex === 6){
+        scores[colIndex-1].sixes = evaluation.sixes;
+      }
+      else if (rowIndex === 7){
+        scores[colIndex-1].sum = evaluation.sum;
+      }
+      else if (rowIndex === 9){
+        scores[colIndex-1].bonus = evaluation.bonus;
+      }
+      else if (rowIndex === 10){
+        scores[colIndex-1].threeOfAKind = evaluation.threeOfAKind;
+      }
+      else if (rowIndex === 11){
+        scores[colIndex-1].fourOfAKind = evaluation.fourOfAKind;
+      }
+      else if (rowIndex === 12){
+        scores[colIndex-1].fullHouse = evaluation.fullHouse;
+      }
+      else if (rowIndex === 13){
+        scores[colIndex-1].smallStraight = evaluation.smallStraight;
+      }
+      else if (rowIndex === 14){
+        scores[colIndex-1].largeStraight = evaluation.largeStraight;
+      }
+      else if (rowIndex === 15){
+        scores[colIndex-1].chance = evaluation.chance;
+      }
+      else if (rowIndex === 16){
+        scores[colIndex-1].yahtzee = evaluation.yahtzee;
+      }
+      else if (rowIndex === 17){
+        scores[colIndex-1].totalSum = evaluation.totalSum;
+      }
+      setScores(scores);
+      console.log(scores);
+      updateCells();
+      console.log(cellValues);
+  
+      setLockedCells((prevLocked) => ({
+        ...prevLocked,
+        [`${rowIndex}-${colIndex}`]: true,
+      }));
     });
 
-    console.log(scores);
-    updateCells();
-    console.log(cellValues);
-
-    setLockedCells((prevLocked) => ({
-      ...prevLocked,
-      [`${rowIndex}-${colIndex}`]: true,
-    }));
+    
   }
   
   function updateCells() {
@@ -92,13 +148,16 @@ export default function ScoreTable({ numPlayers }) {
         [`${4}-${i+1}`]: scores[i].fours,
         [`${5}-${i+1}`]: scores[i].fives,
         [`${6}-${i+1}`]: scores[i].sixes,
-        [`${9}-${i+1}`]: scores[i].threeofakind,
-        [`${10}-${i+1}`]: scores[i].fourofakind,
-        [`${11}-${i+1}`]: scores[i].fullhouse,
-        [`${12}-${i+1}`]: scores[i].smallstraight,
-        [`${13}-${i+1}`]: scores[i].largestraight,
+        [`${7}-${i+1}`]: scores[i].bonus,
+        [`${8}-${i+1}`]: scores[i].sum,
+        [`${9}-${i+1}`]: scores[i].threeOfaKind,
+        [`${10}-${i+1}`]: scores[i].fourOfAKind,
+        [`${11}-${i+1}`]: scores[i].fullHouse,
+        [`${12}-${i+1}`]: scores[i].smallStraight,
+        [`${13}-${i+1}`]: scores[i].largeStraight,
         [`${14}-${i+1}`]: scores[i].chance,
         [`${15}-${i+1}`]: scores[i].yahtzee,
+        [`${16}-${i+1}`]: scores[i].totalSum,
     }));
     }
   }

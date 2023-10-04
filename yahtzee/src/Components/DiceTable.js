@@ -119,7 +119,7 @@ export default function DiceTable() {
       </div>
 
       <div className="dice-table-bottom">
-        <Button className="btn" onClick={roll}>
+        <Button className="btn" onClick={roll} disabled={numRolls === maxTurns}>
           Roll Dice
         </Button>     
         <div className="player-name">Player {currentTurn}'s turn</div>
