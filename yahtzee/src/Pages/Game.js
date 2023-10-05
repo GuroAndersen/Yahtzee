@@ -8,6 +8,7 @@ import ButtonContext from "../Components/ButtonContext";
 import TurnContext from "../Components/TurnContext";
 import SaveDiceContext from "../Components/SaveDiceContext";
 import WinnerContext from "../Components/WinnerContext";
+import EvaluateContext from "../Components/EvaluateContext";
 
 
 export default function Game() {
@@ -18,6 +19,7 @@ export default function Game() {
   const [currentTurn, setCurrentTurn] = useState(1);
   const [saveDice, setSaveDice] = useState([false, false, false, false, false]);
   const [winner, setWinner] = useState("");
+  const [evaluation, setEvaluation] = useState({});
  
   return (
     <div className="Game-component">
@@ -37,6 +39,7 @@ export default function Game() {
       <TurnContext.Provider value={{currentTurn, setCurrentTurn}}>
       <SaveDiceContext.Provider value={{saveDice, setSaveDice}}>
       <WinnerContext.Provider value={{winner, setWinner}}>
+      <EvaluateContext.Provider value={{evaluation, setEvaluation}}>
         <div className="game-components">
         <div className="dice-table">
           <DiceTable />
@@ -45,6 +48,8 @@ export default function Game() {
           <ScoreTable numPlayers={parseInt(numPlayers, 10)} />
         </div>
       </div>
+      </EvaluateContext.Provider>
+        
       </WinnerContext.Provider>
         
       </SaveDiceContext.Provider>

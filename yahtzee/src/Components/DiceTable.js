@@ -8,6 +8,7 @@ import DiceContext from "./DiceContext";
 import ButtonContext from "./ButtonContext";
 import TurnContext from "./TurnContext";
 import SaveDiceContext from "./SaveDiceContext";
+import EvaluateContext from "./EvaluateContext";
 
 export default function DiceTable() {
   const { numPlayers } = useParams();
@@ -15,7 +16,7 @@ export default function DiceTable() {
   const {diceValue, setDiceValue} = useContext(DiceContext);
   const {currentTurn, setCurrentTurn} = useContext(TurnContext);
   const {numRolls, setNumRolls} = useContext(ButtonContext);
-  const [evaluation, setEvaluation] = useState({});
+  const {evaluation, setEvaluation} = useContext(EvaluateContext);
 
   const maxTurns = 3;
   const numberOfDice = 5;
@@ -52,26 +53,25 @@ export default function DiceTable() {
         setDiceValue(newDiceValue);
         //setDiceImage(newDiceValue);
         console.log(newDiceValue);
-        handleDice(newDiceValue);
 
+      EvaluateRoll(newDiceValue, (evaluation) => {
+        console.log("numrolls again: ", numRolls);   
         if (numRolls < maxTurns) {
+            setEvaluation(evaluation);
             setNumRolls(numRolls + 1);
         } else {
+            setEvaluation(undefined);
             setNumRolls(0);
-        }
+        }   
+      })
+  
     })
     .catch(error => {
         console.error("Error fetching dice roll value: ", error);
     });
   }
 
-  const handleDice = (newDiceValue) => {
-      EvaluateRoll(newDiceValue, (evaluation) => {
-        console.log(evaluation);
-        
-        setEvaluation(evaluation);
-      })
-  }
+  
 
   return (
     <div className="dice-table-content">

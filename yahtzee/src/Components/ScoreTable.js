@@ -6,6 +6,7 @@ import ButtonContext from "./ButtonContext";
 import TurnContext from "./TurnContext";
 import SaveDiceContext from "./SaveDiceContext";
 import WinnerContext from "../Components/WinnerContext";
+import EvaluateContext from "./EvaluateContext";
  
 export default function ScoreTable({ numPlayers }) {
   const upperSection = [
@@ -37,14 +38,15 @@ export default function ScoreTable({ numPlayers }) {
   const [cellValues, setCellValues] = useState({});
   const [lockedCells, setLockedCells] = useState([]);
   const {diceValue, setDiceValue} = useContext(DiceContext);
-  const [evaluation, setEvaluation] = useState({});
   const { numRolls, setNumRolls } = useContext(ButtonContext);
   const {currentTurn, setCurrentTurn} = useContext(TurnContext);
   const {saveDice, setSaveDice} = useContext(SaveDiceContext);
   const {winner, setWinner} = useContext(WinnerContext);
+  const {evaluation, setEvaluation} = useContext(EvaluateContext);
 
   const resetRolls = () => {
     setNumRolls(0);
+    setEvaluation(undefined);
   }
 
   const initScore = (numPlayers) => {
@@ -52,20 +54,20 @@ export default function ScoreTable({ numPlayers }) {
     
     for (let i = 0; i < numPlayers; i++) {
       const playerscore = {
-        ones: 1,
-        twos: 1,
-        threes: 1,
-        fours: 1,
-        fives: 1,
-        sixes: 1,
-        sum: 1,
-        bonus: 1,
-        threeOfAKind: 1,
-        fourOfAKind: 1,
-        fullHouse: 1,
-        smallStraight: 1,
-        largeStraight: 1,
-        chance: 1,
+        ones: undefined,
+        twos: undefined,
+        threes: undefined,
+        fours: undefined,
+        fives: undefined,
+        sixes: undefined,
+        sum: undefined,
+        bonus: undefined,
+        threeOfAKind: undefined,
+        fourOfAKind: undefined,
+        fullHouse: undefined,
+        smallStraight: undefined,
+        largeStraight: undefined,
+        chance: undefined,
         yahtzee: undefined,
         totalSum: undefined,
       };
@@ -111,8 +113,6 @@ export default function ScoreTable({ numPlayers }) {
   
     const value = EvaluateRoll(diceValue, (evaluation) => {
       console.log("Here is eval: ", evaluation);
-      let ev = evaluation;
-      setEvaluation(evaluation);
 
       if (rowIndex === 1) {
         scores[colIndex-1].ones = evaluation.aces;
@@ -229,6 +229,53 @@ export default function ScoreTable({ numPlayers }) {
   }
 
   useEffect(() => {
+    checkWinners();
+    console.log("Hei og ha: ", evaluation);
+  })
+
+  function evaluationValue(index) {
+    if (index === 1) {
+      return evaluation.aces;
+    }
+    if (index === 2) {
+      return evaluation.twos;
+    }
+    if (index === 3) {
+      return evaluation.threes;
+    }
+    if (index === 4) {
+      return evaluation.fours;
+    }
+    if (index === 5) {
+      return evaluation.fives;
+    }
+    if (index === 6) {
+      return evaluation.sixes;
+    }
+    if (index === 9) {
+      return evaluation.threeOfAKind;
+    }
+    if (index === 10) {
+      return evaluation.fourOfAKind;
+    }
+    if (index === 11) {
+      return evaluation.fullHouse;
+    }
+    if (index === 12) {
+      return evaluation.smallStraight;
+    }
+    if (index === 13) {
+      return evaluation.largeStraight;
+    }
+    if (index === 14) {
+      return evaluation.chance;
+    }
+    if (index === 15) {
+      return evaluation.yahtzee;
+    }
+  }
+
+  function checkWinners() {
     if (checkCompletion(cellValues)) {
       let highestScore = 0;
       let leadingPlayer = 0;
@@ -258,7 +305,7 @@ export default function ScoreTable({ numPlayers }) {
         setWinner(winnerString);
       }
     } 
-  })
+  }
   
   function updateCells(scores) {
     for (let i = 0; i < cols - 1; i++) {
@@ -290,7 +337,7 @@ export default function ScoreTable({ numPlayers }) {
       <table style={{ marginLeft: "2vw" }}>
         <tbody>
           {Array.from({ length: rows }).map((_, i) => (
-            <tr key={i}>
+            <tr key={i} id={"row"+i}>
               {Array.from({ length: cols }).map((_, j) => {
                 if (j === 0) {
                   return <td key={j}>{allSections[i]}</td>;
@@ -299,8 +346,8 @@ export default function ScoreTable({ numPlayers }) {
                     return <td key={j}>Player {j}</td>;
                   } else {
                     return (
-                      <td key={j} onClick={() => handleClick(i, j)} style={{ cursor: 'pointer', backgroundColor: 'var(--primary-100)', color: 'black'}}>
-                        {cellValues[`${i}-${j}`] !== undefined ? cellValues[`${i}-${j}`] : ""} {/* Display cell value */}
+                      <td key={j} onClick={() => handleClick(i, j)} style={{ cursor: 'pointer', backgroundColor: 'var(--primary-100)', color: `${cellValues[`${i}-${j}`] !== undefined ? 'black' : (j === currentTurn && evaluation !== undefined ? 'teal' : 'black')}`}}>
+                        {cellValues[`${i}-${j}`] !== undefined ? cellValues[`${i}-${j}`] : (j === currentTurn && evaluation !== undefined && evaluationValue(i) !== 0 ?  evaluationValue(i) : "")} {/* Display cell value */}
                       </td>
                     );
                   }
