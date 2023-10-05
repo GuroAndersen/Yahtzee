@@ -81,7 +81,7 @@ export default function ScoreTable({ numPlayers }) {
       if (thisTurn === parseInt(numPlayers)) {
         return 1;
       }
-      return prevTurn + 1;
+      return thisTurn + 1;
     });
   }
 
